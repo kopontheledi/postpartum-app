@@ -1,8 +1,10 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import ArticleForm from "./ArticleForm";
+import EditArticleForm from "./EditArticleForm";
 
-export default async function NewArticlePage() {
+export default async function EditArticlePage({ params }) {
+  const { id } = await params;
+
   const supabase = await createClient();
 
   const {
@@ -23,6 +25,16 @@ export default async function NewArticlePage() {
     redirect("/dashboard");
   }
 
+  const { data: article } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!article) {
+    notFound();
+  }
+
   const { data: topics } = await supabase
     .from("topics")
     .select(`
@@ -36,6 +48,9 @@ export default async function NewArticlePage() {
     .order("name");
 
   return (
-    <ArticleForm topics={topics || []} />
+    <EditArticleForm
+      article={article}
+      topics={topics || []}
+    />
   );
 }

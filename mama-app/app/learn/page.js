@@ -6,7 +6,7 @@ export default async function LearnPage() {
 
   const { data: articles, error } = await supabase
     .from("articles")
-    .select("id, title, slug, summary, featured, published_at")
+    .select("id, title, slug, summary, featured, created_at, published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -36,29 +36,40 @@ export default async function LearnPage() {
           <div className="grid gap-5 md:grid-cols-2">
 
             {articles.map((article) => (
-              <Link
-                href={`/learn/${article.slug}`}
-                key={article.id}
-                className="rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md"
-              >
-                {article.featured && (
-                  <span className="text-sm font-medium text-red-300">
-                    🌷 Featured
-                  </span>
-                )}
+             <Link
+  href={`/learn/${article.slug}`}
+  key={article.id}
+  className="rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md"
+>
+  {article.featured && (
+    <span className="text-sm font-medium">
+      🌷 Featured
+    </span>
+  )}
 
-                <h2 className="mt-2 text-xl font-semibold text-red-300">
-                  {article.title}
-                </h2>
+  <h2 className="mt-2 text-xl font-semibold">
+    {article.title}
+  </h2>
 
-                <p className="mt-3 text-gray-600">
-                  {article.summary}
-                </p>
+  <p className="mt-3 text-gray-600">
+    {article.summary}
+  </p>
 
-                <p className="mt-5 font-medium text-pink-300">
-                  Read article →
-                </p>
-              </Link>
+  <p className="mt-4 text-sm text-gray-400">
+    📅{" "}
+    {new Date(
+      article.published_at || article.created_at
+    ).toLocaleDateString("en-ZA", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}
+  </p>
+
+  <p className="mt-5 font-medium">
+    Read article →
+  </p>
+</Link>
             ))}
 
           </div>

@@ -33,7 +33,7 @@ export default async function AdminArticlesPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl text-red-300 font-bold">Articles</h1>
+            <h1 className="text-3xl font-bold">Articles</h1>
 
             <p className="mt-2 text-gray-600">
               Create and manage Mama App content.
@@ -53,19 +53,34 @@ export default async function AdminArticlesPage() {
             articles.map((article) => (
               <div
                 key={article.id}
-                className="flex items-center justify-between border-b p-5 last:border-b-0 text-pink-400"
+                className="flex items-center justify-between gap-4 border-b p-5 last:border-b-0"
               >
                 <div>
+                    
                   <h2 className="font-semibold">{article.title}</h2>
 
-                  <p className="mt-1 text-sm text-pink-300">
-                    {article.status}
+                  <p className="mt-1 text-sm text-gray-500">{article.status}</p>
+
+                  <p className="mt-1 text-xs text-gray-400">
+                    Created{" "}
+                    {new Date(article.created_at).toLocaleDateString("en-ZA", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </p>
                 </div>
+
+                <Link
+                  href={`/admin/articles/${article.id}/edit`}
+                  className="rounded-lg border px-4 py-2 text-sm"
+                >
+                  Edit
+                </Link>
               </div>
             ))
           ) : (
-            <div className="p-8 text-center text-black">
+            <div className="p-8 text-center text-gray-500">
               No articles yet.
             </div>
           )}
